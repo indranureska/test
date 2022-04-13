@@ -6,6 +6,8 @@ github.com/google/go-cmp v0.5.2/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/
 github.com/gorilla/mux v1.8.0/go.mod h1:DVbg23sWSpFRCP0SfiEN6jmj59UnW/n46BH5rLB71So=
 github.com/indranureska/service v0.0.0-20220307230259-915fb0cd12f0 h1:2yP4KVsTcipfaJfYzsArZ+o5HbPr6Zl7k45/ySgQTQ8=
 github.com/indranureska/service v0.0.0-20220307230259-915fb0cd12f0/go.mod h1:5nREUDg7KJssCi/4nB6ehRRjiWBJrPjXpLRDc8X3I0U=
+github.com/indranureska/service v0.0.0-20220412082656-5920ff8cccd7 h1:Ld36U45gYzZal6NdlmF/YiMmMOYqBgcMoSZHyM/kTeM=
+github.com/indranureska/service v0.0.0-20220412082656-5920ff8cccd7/go.mod h1:5nREUDg7KJssCi/4nB6ehRRjiWBJrPjXpLRDc8X3I0U=
 github.com/klauspost/compress v1.13.6/go.mod h1:/3/Vjq9QcHkK5uEr5lBEmyoZ1iFhe47etQ6QUkpK6sk=
 github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=
 github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=

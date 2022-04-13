@@ -5,21 +5,19 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"time"
 
 	dto "github.com/indranureska/service/dto"
 )
 
+const SERVICE_URL = "http://localhost:8000"
+
 func main() {
-	log.Println("running test...")
+	fmt.Println("Running test...")
 
-	log.Println("1. Get list of user")
-
-	log.Println("2. Find user")
-
-	log.Println("3. Create user")
+	fmt.Println("1. Create user")
+	fmt.Println("start")
 	var user dto.User
 	user.FirstName = "John"
 	user.LastName = "Doe"
@@ -36,10 +34,9 @@ func main() {
 	fmt.Println("User to create : ")
 	fmt.Println(string(userJson))
 
-	resp, err := http.Post("http://localhost:8000/create-user", "application/json", bytes.NewBuffer(userJson))
+	resp, err := http.Post(SERVICE_URL+"/create-user", "application/json", bytes.NewBuffer(userJson))
 	if err != nil {
-		fmt.Println(err)
-		return
+		panic(err)
 	}
 
 	defer resp.Body.Close()
@@ -49,9 +46,45 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		jsonStr := string(body)
-		fmt.Println("Response : ", jsonStr)
+
+		var userCreateResp dto.Response
+		json.Unmarshal(body, &userCreateResp)
+
+		fmt.Println("Inserted doc id: ", userCreateResp.InsertedID)
+
 	} else {
-		fmt.Println("Get failed with error: ", resp.Status)
+		fmt.Println("User creation failed with error: ", resp.Status)
+		panic(resp.Status)
 	}
+	fmt.Println("end")
+
+	fmt.Println("2. Get list of user")
+	fmt.Println("start")
+	getAllResp, err := http.Get(SERVICE_URL + "/user-list")
+	if err != nil {
+		panic(err)
+	}
+
+	defer getAllResp.Body.Close()
+	getAllRespBody, err := ioutil.ReadAll(getAllResp.Body)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("Response: ", string(getAllRespBody))
+
+	var users []dto.User
+	json.Unmarshal(getAllRespBody, &users)
+
+	for i, s := range users {
+		fmt.Println(i, "id: "+s.UserEmail)
+	}
+	fmt.Println("Unmarshal: ", users)
+
+	fmt.Println("end")
+
+	fmt.Println("3. Find user")
+	fmt.Println("start")
+
+	fmt.Println("end")
 }
