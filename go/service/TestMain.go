@@ -77,13 +77,33 @@ func main() {
 	json.Unmarshal(getAllRespBody, &users)
 
 	for i, s := range users {
-		fmt.Println(i, "id: "+s.UserEmail)
+		fmt.Println(i, "User email: "+s.UserEmail)
 	}
-	fmt.Println("Unmarshal: ", users)
+	fmt.Println("end")
+
+	fmt.Println("3. Find user by email address")
+	fmt.Println("start")
+	findUserResp, err := http.Get(SERVICE_URL + "/find-user/" + user.UserEmail)
+	if err != nil {
+		panic(err)
+	}
+
+	defer findUserResp.Body.Close()
+	findUserRespBody, err := ioutil.ReadAll(findUserResp.Body)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("Response: ", string(findUserRespBody))
 
 	fmt.Println("end")
 
-	fmt.Println("3. Find user")
+	fmt.Println("4. Update user")
+	fmt.Println("start")
+
+	fmt.Println("end")
+
+	fmt.Println("5. Delete user")
 	fmt.Println("start")
 
 	fmt.Println("end")
