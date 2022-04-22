@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"time"
 
 	dto "github.com/indranureska/service/dto"
@@ -18,6 +19,7 @@ func main() {
 
 	fmt.Println("1. Create user")
 	fmt.Println("start")
+
 	var user dto.User
 	user.FirstName = "John"
 	user.LastName = "Doe"
@@ -94,17 +96,64 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Println("Response: ", string(findUserRespBody))
+	fmt.Println("User found: ", string(findUserRespBody))
 
 	fmt.Println("end")
 
 	fmt.Println("4. Update user")
 	fmt.Println("start")
 
+	var userToUpdate dto.User
+	json.Unmarshal(findUserRespBody, &userToUpdate)
+
+	fmt.Println("User ID to update : ", userToUpdate.ID)
+
+	userToUpdate.FirstName = "Jhonny"
+
+	// Marshall to JSON
+	userToUpdateJson, err := json.Marshal(userToUpdate)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("User Data to update : ", string(userToUpdateJson))
+
+	client := &http.Client{Timeout: time.Duration(1) * time.Second}
+	updateUserReq, err := http.NewRequest(http.MethodPut, SERVICE_URL+"/update-user", bytes.NewBuffer(userToUpdateJson))
+	if err != nil {
+		panic(err)
+	}
+
+	// Set request header content-type for json
+	updateUserReq.Header.Set("Content-Type", "application/json; charset=utf-8")
+	updateUserResp, err := client.Do(updateUserReq)
+	if err != nil {
+		panic(err)
+	}
+
+	defer updateUserResp.Body.Close()
+
+	fmt.Println("Update response status code: " + strconv.Itoa(updateUserResp.StatusCode))
+
 	fmt.Println("end")
 
 	fmt.Println("5. Delete user")
 	fmt.Println("start")
 
+	fmt.Println("User ID to delete : ", userToUpdate.ID.Hex())
+
+	deleteUserReq, err := http.NewRequest(http.MethodDelete, SERVICE_URL+"/delete-user/"+userToUpdate.ID.Hex(), nil)
+	if err != nil {
+		panic(err)
+	}
+
+	// Set request header content-type for json
+	deleteUserReq.Header.Set("Content-Type", "application/json; charset=utf-8")
+	deleteUserResp, err := client.Do(deleteUserReq)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("Delete response status code: " + strconv.Itoa(deleteUserResp.StatusCode))
 	fmt.Println("end")
 }
