@@ -23,7 +23,7 @@ func main() {
 	var user dto.User
 	user.FirstName = "John"
 	user.LastName = "Doe"
-	user.UserEmail = "john.doe@mail.com"
+	user.UserEmail = "projectzerofour@gmail.com"
 	user.Password = "abcdefg"
 	user.LastLogin = time.Now().UTC().String()
 
@@ -43,8 +43,9 @@ func main() {
 
 	defer resp.Body.Close()
 
+	body, err := ioutil.ReadAll(resp.Body)
+
 	if resp.StatusCode == http.StatusCreated {
-		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			panic(err)
 		}
@@ -55,7 +56,8 @@ func main() {
 		fmt.Println("Inserted doc id: ", userCreateResp.InsertedID)
 
 	} else {
-		fmt.Println("User creation failed with error: ", resp.Status)
+		// TODO: To display error message from service
+		fmt.Println("User creation failed with error: ", string(body))
 		panic(resp.Status)
 	}
 	fmt.Println("end")
