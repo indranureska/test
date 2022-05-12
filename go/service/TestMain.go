@@ -56,8 +56,11 @@ func main() {
 		fmt.Println("Inserted doc id: ", userCreateResp.InsertedID)
 
 	} else {
-		// TODO: To display error message from service
-		fmt.Println("User creation failed with error: ", string(body))
+		// Display error message from service
+		var errorResponse dto.ErrorResponse
+		json.Unmarshal(body, &errorResponse)
+
+		fmt.Println("User creation failed with error: ", errorResponse.Error)
 		panic(resp.Status)
 	}
 	fmt.Println("end")
