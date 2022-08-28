@@ -123,7 +123,7 @@ func RunUserServiceTest() {
 
 	fmt.Println("User Data to update : ", string(userToUpdateJson))
 
-	client := &http.Client{Timeout: time.Duration(1) * time.Second}
+	client := &http.Client{Timeout: time.Duration(5) * time.Second}
 	updateUserReq, err := http.NewRequest(http.MethodPut, SERVICE_URL+"/update-user", bytes.NewBuffer(userToUpdateJson))
 	if err != nil {
 		panic(err)
