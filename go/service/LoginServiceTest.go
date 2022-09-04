@@ -13,24 +13,11 @@ import (
 
 func RunLoginServiceTest() {
 	fmt.Println("Running user login test...")
-	// findUserResp, err := http.Get(SERVICE_URL + "/find-user/projectzerofour@gmail.com")
-	// if err != nil {
-	// 	panic(err)
-	// }
 
-	// fmt.Println("Status code :", findUserResp.StatusCode)
-
-	// defer findUserResp.Body.Close()
-	// findUserRespBody, err := ioutil.ReadAll(findUserResp.Body)
-	// if err != nil {
-	// 	panic(err)
-	// }
-
-	// fmt.Println("User found: ", string(findUserRespBody))
-
+	// Login
 	var loginUser dto.User
 	loginUser.UserEmail = "projectzerofour@gmail.com"
-	loginUser.Password = "abcedfg"
+	loginUser.Password = "abcdefg"
 
 	loginUserJson, err := json.Marshal(loginUser)
 	if err != nil {
@@ -56,7 +43,7 @@ func RunLoginServiceTest() {
 
 	defer loginUserResp.Body.Close()
 
-	body, err := ioutil.ReadAll(loginUserResp.Body)
+	loginRespBody, err := ioutil.ReadAll(loginUserResp.Body)
 
 	if loginUserResp.StatusCode != http.StatusBadRequest {
 		if err != nil {
@@ -64,16 +51,54 @@ func RunLoginServiceTest() {
 		}
 
 		var userloggedIn dto.User
-		json.Unmarshal(body, &userloggedIn)
+		json.Unmarshal(loginRespBody, &userloggedIn)
 
 		fmt.Println("user logged in: " + userloggedIn.UserEmail)
 
 	} else {
 		// Display error message from service
 		var errorResponse dto.ErrorResponse
-		json.Unmarshal(body, &errorResponse)
+		json.Unmarshal(loginRespBody, &errorResponse)
 
 		fmt.Println("login failed with error: ", errorResponse.Error)
 		panic(loginUserResp.Status)
 	}
+
+	// Logout
+	fmt.Println("Logout")
+	userLogoutReq, err := http.NewRequest(http.MethodPost, SERVICE_URL+"/logout", bytes.NewBuffer(loginUserJson))
+	if err != nil {
+		panic(err)
+	}
+
+	// Set request header content-type for json
+	userLogoutReq.Header.Set("Content-Type", "application/json; charset=utf-8")
+	logoutUserResp, err := client.Do(userLogoutReq)
+	if err != nil {
+		panic(err)
+	}
+
+	defer logoutUserResp.Body.Close()
+
+	logoutRespBody, err := ioutil.ReadAll(logoutUserResp.Body)
+
+	if logoutUserResp.StatusCode != http.StatusBadRequest {
+		if err != nil {
+			panic(err)
+		}
+
+		var userloggedOut dto.User
+		json.Unmarshal(logoutRespBody, &userloggedOut)
+
+		fmt.Println("user logged out: " + userloggedOut.UserEmail)
+
+	} else {
+		// Display error message from service
+		var errorResponse dto.ErrorResponse
+		json.Unmarshal(logoutRespBody, &errorResponse)
+
+		fmt.Println("logout failed with error: ", errorResponse.Error)
+		panic(logoutUserResp.Status)
+	}
+
 }
