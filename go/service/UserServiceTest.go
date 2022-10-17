@@ -17,13 +17,13 @@ const SERVICE_URL = "http://localhost:8000"
 func RunUserServiceTest() {
 	fmt.Println("Running test...")
 
-	fmt.Println("1. Create user")
-	fmt.Println("start")
+	// fmt.Println("1. Create user")
+	// fmt.Println("start")
 
 	var user dto.User
 	user.FirstName = "John"
 	user.LastName = "Doe"
-	user.UserEmail = "projectzerofour@gmail.com"
+	user.UserEmail = "projectzero@gmail.com"
 	user.Password = "abcdefg"
 	user.LastLogin = time.Now().UTC().String()
 
